@@ -125,7 +125,7 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
 
     // Fill Images
     function fillImages(response) {
-        var slides = $scope.slides = [];
+        var slides = [];
         var currIndex = 0;
         $scope.myInterval = 5000;
         $scope.noWrapSlides = false;
@@ -139,6 +139,7 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
         for (var i = 0; i < response.length; i++) {
             $scope.addSlide(response[i]);
         }
+        $scope.slides = slides;
     }
 
     // By Default fetch Boston Images
