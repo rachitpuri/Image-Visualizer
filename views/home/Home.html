@@ -1,0 +1,71 @@
+﻿<div class="container">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-secondary" ng-click="submit()" type="button">Go!</button>
+                </span>
+                <input type="text" ng-model="city" name="text" class="form-control" placeholder="Enter City...">
+            </div>
+        </div>
+    </div>
+
+    <div class="row cityImages" style="margin-top:20px; margin-bottom:20px">
+        <div class="col-lg-6">
+            <uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+                    <img ng-src="{{slide.image.url}}" style="max-height:400px; min-width:100%">
+                    <div class="carousel-caption">
+                        <p>{{slide.image.place}}</p>
+                    </div>
+                </uib-slide>
+            </uib-carousel>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="input-group" id="adv-search">
+                <input type="text" class="form-control" ng-model="filterCityName" placeholder="Search images for particular city e.g. Boston" />
+                <div class="input-group-btn">
+                    <div class="btn-group" role="group">
+                        <div class="dropdown dropdown-lg">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <label for="filter">Filter by City or State name</label>
+                                        <select class="form-control" ng-init="selectedItem = cityNames[0]" ng-change="updateCity()" ng-model="selectedItem" ng-options="item as item.label for item in cityNames">
+                                            {{selectedItem.label}}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contain">Type of tourist attraction</label>
+                                        <input class="form-control" type="text" placeholder="park" ng-model="filterPlace" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contain">Rating</label>
+                                        <input class="form-control" placeholder="0 to 10" min="0" max="10" ng-model="filterRating" type="number" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="filter">Image width</label>
+                                        <select class="form-control" ng-init="imageWidth = widths[0]" ng-model="imageWidth" ng-options="item as item.label for item in widths">
+                                            {{imageWidth.label}}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="filter">Image height</label>
+                                        <select class="form-control" ng-init="imageHeight = heights[0]" ng-model="imageHeight" ng-options="item as item.label for item in heights">
+                                            {{imageHeight.label}}
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" ng-click="query()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                                </form>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" ng-click="imagesByCityName()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
