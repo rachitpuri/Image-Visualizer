@@ -1,0 +1,28 @@
+{
+  "name": "Image-Visualizer",
+  "version": "1.0.0",
+  "description": "web portal to display images based on filters",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "mongoose": "^4.4.17",
+    "mongoose-text-search": "0.0.2",
+    "multer": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rachitpuri/Image-Visualizer.git"
+  },
+  "author": "rachit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rachitpuri/Image-Visualizer/issues"
+  },
+  "homepage": "https://github.com/rachitpuri/Image-Visualizer"
+}
