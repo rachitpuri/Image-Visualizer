@@ -6,11 +6,18 @@
   "dependencies": {
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-jasmine": "^1.0.2",
     "mongoose": "^4.4.17",
     "mongoose-text-search": "0.0.2",
     "multer": "^1.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-ie-launcher": "^1.0.0"
+  },
   "scripts": {
     "test": "test",
     "start": "node server.js"
