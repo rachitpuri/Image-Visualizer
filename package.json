@@ -4,6 +4,8 @@
   "description": "web portal to display images based on filters",
   "main": "server.js",
   "dependencies": {
+    "angular": "^1.5.5",
+    "angular-mocks": "^1.5.5",
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "jasmine-core": "^2.4.1",

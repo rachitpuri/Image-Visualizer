@@ -40,14 +40,17 @@ app.post("/api/uploadImage", function (req, res) {
     Image.insertMany(json, function (err, data) {
         if (err)
             throw (err);
-        else
+        else {
+            res.sendStatus(200);
             console.log('Images saved');
+        }
     });
 });
 
 // ----------------------------Images based on filtering ----------------------------------------- //
 
-app.get("/api/getImages/filter/:city/:place/:width/:height/:rating", function (req, res) {
+app.get("/api/getImages/filter/:page/:city/:place/:width/:height/:rating", function (req, res) {
+    var index = ((req.params.page - 1) * 10);
     var queryCity = req.params.city;
     var queryPlace = req.params.place;
     var queryWidth = req.params.width;
@@ -64,6 +67,7 @@ app.get("/api/getImages/filter/:city/:place/:width/:height/:rating", function (r
     query.find({ 'width': { $gt: queryWidth } });
     query.find({ 'height': { $gt: queryHeight } });
     query.find({ 'rating': { $gt: queryRating } });
+    query.skip(index);
     query.limit(10);
     query.exec(function (err, doc) {
         if (err)

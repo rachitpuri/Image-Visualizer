@@ -1,6 +1,6 @@
 ﻿"use strict"
 
-app.controller("HomeController", function ($scope, $rootScope, $http, $routeParams) {
+app.controller("HomeController", function ($scope, $rootScope, $http, $routeParams, $log) {
 
     $scope.cityNames = [
         { value: 0, label: "Boston" },
@@ -35,10 +35,28 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
 
     var searchbycity = "Boston";
 
+    // Admin can add more cities data dynamically
+    $scope.addOption = function (text) {
+        // check if new city is already present in the dropdown? If yes, do not add it.
+        var found = false;
+        var noOfCities = $scope.cityNames.length;
+        for (var i = 0; i < noOfCities; i++) {
+            if (text.toLowerCase() === $scope.cityNames[i].label.toLowerCase()) {
+                found = true;
+            }
+        }
+        if (found == false)
+            $scope.cityNames.push({ value: noOfItems + 1, label: text });
+    }
+
+    /*
+    * This function is used to fetch the Images from Foursquare API and fill it's metadata information 
+    * to our local (NoSQL) database which will be used in future for  
+    */
     $scope.submit = function () {
         // fill data
         var city = $scope.city
-        $http.get("https://api.foursquare.com/v2/venues/explore?client_id=CNJEZO3QR35ZFEJAPZUIKS4AFLCCPO3WOAAY4H0TCAVSB545&client_secret=NLHBQ250KZTZIMYYGUZUILNSDWZ4HVXOOTRWWHDEC55Q4YAP&v=20130815&near=" + city + "&section=sights&limit=30&venuePhotos=1")
+        $http.get("https://api.foursquare.com/v2/venues/explore?client_id=CNJEZO3QR35ZFEJAPZUIKS4AFLCCPO3WOAAY4H0TCAVSB545&client_secret=NLHBQ250KZTZIMYYGUZUILNSDWZ4HVXOOTRWWHDEC55Q4YAP&v=20130815&near=" + city + "&section=sights&limit=50&venuePhotos=1")
             .success(function (response) {
                 console.log(response);
                 var size = response.response.groups[0].items.length;
@@ -71,6 +89,8 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
                 $http.post("api/uploadImage", json)
                     .success(function (response) {
                         console.log("image inserted successfully");
+                        //$scope.addOption(city);
+                        $scope.city = "";
                     })
                     .error(function () {
                         console.log("Some error while filling DB");
@@ -85,10 +105,21 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
         $scope.filterCityName = $scope.selectedItem.label;
     }
 
+    /*
+    * Diplays Images based on city name
+    */
     $scope.imagesByCityName = function () {
+        // clear dropdown filters
         searchbycity = $scope.filterCityName;
-        if (searchbycity.length == 0 || searchbycity == undefined) {
+        if (searchbycity == undefined || searchbycity.length == 0) {
             searchbycity = "Boston"
+        }
+        // check if search city is in the dropdown ? If yes, change dropdown label
+        var noOfCities = $scope.cityNames.length;
+        for (var i = 0; i < noOfCities; i++) {
+            if (searchbycity.toLowerCase() === $scope.cityNames[i].label.toLowerCase()) {
+                $scope.selectedItem = $scope.cityNames[i];
+            }
         }
         $http.get("api/getImages/city/" + searchbycity)
             .success(function (response) {
@@ -100,7 +131,10 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
             })
     }
 
-    $scope.query = function () {
+    /*
+    * Display Images based on filters (cityname, place, rating, width, height) selected
+    */
+    $scope.query = function (page) {
         var city = $scope.selectedItem.label;
         var place = $scope.filterPlace;
         var width = $scope.imageWidth.label;
@@ -113,7 +147,7 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
         if (place == undefined || place.length == 0)
             place = "*";
         console.log(city, place, width, height, rating);
-        $http.get("api/getImages/filter/" + city + "/" + place + "/" + width + "/" + height + "/" + rating)
+        $http.get("api/getImages/filter/" + page + "/" + city + "/" + place + "/" + width + "/" + height + "/" + rating)
             .success(function (response) {
                 console.log(response);
                 fillImages(response);
@@ -123,23 +157,32 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
         })
     }
 
-    // Fill Images
+    /**
+    * @description
+    * Display images based on the server's response
+    *
+    * @param {*} server response
+    **/
     function fillImages(response) {
         var slides = [];
-        var currIndex = 0;
+        //var currIndex = 0;
         $scope.myInterval = 5000;
         $scope.noWrapSlides = false;
         $scope.addSlide = function (res) {
             slides.push({
-                image: res,
-                id: currIndex++
+                image: res
+                //id: currIndex++
             });
-            console.log(slides);
+            //console.log(slides);
         };
         for (var i = 0; i < response.length; i++) {
             $scope.addSlide(response[i]);
         }
-        $scope.slides = slides;
+        if (slides.length > 0)
+            $scope.slides = slides;
+        else
+            $scope.slides = [];
+        console.log($scope.slides);
     }
 
     // By Default fetch Boston Images
@@ -152,4 +195,21 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
         .error(function () {
             console.log("Image fetch error")
         })
+
+
+    $scope.totalItems = 50;
+    $scope.currentPage = 1;
+
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+    };
+
+    $scope.pageChanged = function () {
+        $log.log('Page changed to: ' + $scope.currentPage);
+        $scope.query($scope.currentPage);
+    };
+
+    $scope.maxSize = 5;
+    $scope.bigTotalItems = 175;
+    $scope.bigCurrentPage = 1;
 });

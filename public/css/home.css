@@ -1,0 +1,17 @@
+﻿.cityImages {
+    margin-bottom: 20px;
+    margin-top: 20px
+}
+
+.cityImages img {
+    max-height:400px; 
+    min-width:100%;
+}
+
+.displayImages {
+    min-height:400px;
+}
+
+.dash-pagination, .title {
+    text-align:center;
+}
