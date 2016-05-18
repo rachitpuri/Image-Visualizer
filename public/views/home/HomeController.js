@@ -126,8 +126,8 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
                 console.log(response);
                 fillImages(response);
             })
-            .error(function () {
-                console.log("Rating error");
+            .error(function (err) {
+                console.log(err);
             })
     }
 
@@ -152,8 +152,8 @@ app.controller("HomeController", function ($scope, $rootScope, $http, $routePara
                 console.log(response);
                 fillImages(response);
             })
-            .error(function () {
-            console.log("Rating error");
+            .error(function (err) {
+                console.log(err);
         })
     }
 

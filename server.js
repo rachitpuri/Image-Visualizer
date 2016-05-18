@@ -62,8 +62,10 @@ app.get("/api/getImages/filter/:page/:city/:place/:width/:height/:rating", funct
     console.log(queryHeight);
     console.log(queryRating);
     var query = Image.find({ 'city': { $regex: new RegExp('^' + queryCity + '$', "i") } });
-    if (queryPlace !== "*")
+    console.log(typeof queryPlace);
+    if (queryPlace !== "*") {
         query.find({ $text: { $search: queryPlace } });
+    }
     query.find({ 'width': { $gt: queryWidth } });
     query.find({ 'height': { $gt: queryHeight } });
     query.find({ 'rating': { $gt: queryRating } });
